@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${mapperClass}">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+	#foreach($rm in $resultMap) 
+	<resultMap id="${rm.resultMapId}" type="${rm.resultType}">
+		#foreach($rl in $rm.resultList)
+		<result property="$rl" column="$rl"/>
+		#end
+	</resultMap>
+	#end
+	
+	#foreach($op in $operation) 
+	<$op.name id="$op.id" #if($op.parameterType)parameterType="$op.parameterType"#end
+		#if($op.resultMap)resultMap="$op.resultMap"
+		#elseif($op.resultType)resultType="$op.resultType"#end #if($op.name=="insert")
+		keyProperty="id" useGeneratedKeys="true"#end>		
+		$op.sql
+	</$op.name>
+#end</mapper>
